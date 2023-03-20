@@ -46,7 +46,7 @@ Write-Host "Winget Installed"
 If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "CrystalDiskInfo").Length -gt 0)) {
     winget install crystaldiskinfo -e
 }
-Start-Process '$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe'
+Start-Process "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe"
 # PromptForChoice Args
 $Title = "Is disk OK?"
 $Prompt = "Wait that CrystalDiskInfo shows result. Is disk OK? Enter your choice"
@@ -66,13 +66,13 @@ switch($Choice)
             Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
         If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
             winget install git -e
+            exit
         }
-        Start-Process "$env:SystemDrive\Program Files\Git\bin\git.exe clone https://github.com/kimostberg/yllapito.git"
-        cd yllapito
-        .\tweaks.ps1
-        .\SetServicesToManual.ps1
-        .\Update.ps1
-        .\DiskClean.ps1
+        git.exe clone https://github.com/kimostberg/yllapito.git
+        $env:SystemDrive\yllapito\tweaks.ps1
+        $env:SystemDrive\yllapito\SetServicesToManual.ps1
+        $env:SystemDrive\yllapito\Update.ps1
+        $env:SystemDrive\yllapito\DiskClean.ps1
 
         }
     1 { Write-Host "No - Exiting"

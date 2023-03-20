@@ -1,4 +1,5 @@
-﻿mkdir $env:SystemDrive\yllapito\logs
+﻿cd\
+mkdir $env:SystemDrive\yllapito\logs
 Start-Transcript .\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Winutil.log -Append
 
 # Check if winget is installed

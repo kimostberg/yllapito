@@ -1,4 +1,5 @@
-﻿# test
+﻿
+# test
 New-Item -Path "$env:SystemDrive\maintenance\logs" -ItemType Directory 
 Start-Transcript \maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Winutil.log -Append
 

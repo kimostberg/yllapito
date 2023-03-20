@@ -66,7 +66,7 @@ switch($Choice)
         If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
             winget install git -e
         }
-        Start-Process "$env:SystemDrive\Program Files\Git\bin\git.exe" clone https://github.com/kimostberg/yllapito.git
+        Start-Process "$env:SystemDrive\Program Files\Git\bin\git.exe clone https://github.com/kimostberg/yllapito.git"
         cd yllapito
         .\tweaks.ps1
         .\SetServicesToManual.ps1

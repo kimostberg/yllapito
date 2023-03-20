@@ -68,12 +68,10 @@ switch($Choice)
             exit
         }
         git.exe clone https://github.com/kimostberg/yllapito.git
-        cd yllapito
-        .\tweaks.ps1
-        .\SetServicesToManual.ps1
-        .\Update.ps1
-        .\DiskClean.ps1
-        cd\
+        \yllapito\tweaks.ps1
+        \yllapito\SetServicesToManual.ps1
+        \yllapito\Update.ps1
+        \yllapito\DiskClean.ps1
         }
     1 { Write-Host "No - Exiting"
         exit

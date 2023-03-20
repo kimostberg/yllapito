@@ -90,11 +90,11 @@ else {
 }
 
 Write-Host "Updating Winget Programs"
-Write-Host "Check log "ComputerName-Date-WingetUpdates.log""
-winget upgrade --all --silent | Out-File "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-WingetUpdates.log" -Force
+Write-Host "Check log $PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-WingetUpdates.log"
+winget upgrade --all --silent | Out-File "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-WingetUpdates.log" -Force
 Write-Host "Updating Chocolatey Programs"
-Write-Host "Check log "ComputerName-Date-ChocoUpdates.log""
-choco upgrade all | Out-File "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-ChocoUpdates.log" -Force
+Write-Host "Check log $PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-ChocoUpdates.log"
+choco upgrade all | Out-File "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-ChocoUpdates.log" -Force
 Write-Host "Updating Windows" 
-Write-Host "Check log "ComputerName-Date-MSUpdates.log""
-Install-WindowsUpdate -MicrosoftUpdate -AcceptAll | Out-File "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-MSUpdates.log" -Force
+Write-Host "Check log $PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-MSUpdates.log"
+Install-WindowsUpdate -MicrosoftUpdate -AcceptAll | Out-File "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-MSUpdates.log" -Force

@@ -62,10 +62,10 @@ switch($Choice)
         Write-Host "Creating Restore Point in case something bad happens"
             Enable-ComputerRestore -Drive "$env:SystemDrive"
             Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
-        https://raw.githubusercontent.com/kimostberg/yllapito/main/tweaks.ps1
-        https://raw.githubusercontent.com/kimostberg/yllapito/main/SetServicesToManual.ps1
-        https://raw.githubusercontent.com/kimostberg/yllapito/main/Update.ps1
-        https://raw.githubusercontent.com/kimostberg/yllapito/main/DiskClean.ps1
+        irm https://raw.githubusercontent.com/kimostberg/yllapito/main/tweaks.ps1 | iex
+        irm https://raw.githubusercontent.com/kimostberg/yllapito/main/SetServicesToManual.ps1 | iex
+        irm https://raw.githubusercontent.com/kimostberg/yllapito/main/Update.ps1 | iex
+        irm https://raw.githubusercontent.com/kimostberg/yllapito/main/DiskClean.ps1 | iex
 
         }
     1 { Write-Host "No - Exiting"

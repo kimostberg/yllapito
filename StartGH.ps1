@@ -62,10 +62,18 @@ switch($Choice)
         Write-Host "Creating Restore Point in case something bad happens"
             Enable-ComputerRestore -Drive "$env:SystemDrive"
             Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
-        irm https://raw.githubusercontent.com/kimostberg/yllapito/main/tweaks.ps1 | iex
-        irm https://raw.githubusercontent.com/kimostberg/yllapito/main/SetServicesToManual.ps1 | iex
-        irm https://raw.githubusercontent.com/kimostberg/yllapito/main/Update.ps1 | iex
-        irm https://raw.githubusercontent.com/kimostberg/yllapito/main/DiskClean.ps1 | iex
+        If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
+            winget install git -e
+        }
+        c:
+        cd \
+        git clone https://github.com/kimostberg/yllapito.git
+        cd yllapito
+        mkdir logs
+        .\tweaks.ps1
+        .\SetServicesToManual.ps1
+        .\Update.ps1
+        .\DiskClean.ps1
 
         }
     1 { Write-Host "No - Exiting"

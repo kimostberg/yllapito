@@ -69,7 +69,7 @@ switch($Choice)
             exit
         }
         git.exe clone https://github.com/kimostberg/yllapito.git
-        cd $env:SystemDrive\yllapito
+        cd yllapito
         .\tweaks.ps1
         .\SetServicesToManual.ps1
         .\Update.ps1

@@ -1,8 +1,8 @@
-﻿###
+﻿
 # test
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 New-Item -Path "$env:SystemDrive\maintenance\logs" -ItemType Directory 
-Start-Transcript \maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Winutil.log -Append
+Start-Transcript \maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Yllapito.log -Append
 
 # Check if winget is installed
 Write-Host "Checking if Winget is Installed..."

@@ -1,4 +1,6 @@
-﻿Start-Transcript .\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Winutil.log -Append
+﻿cd \
+mkdir $env:SystemDrive\yllapito\logs
+Start-Transcript .\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Winutil.log -Append
 
 # Check if winget is installed
 Write-Host "Checking if Winget is Installed..."
@@ -44,7 +46,7 @@ Write-Host "Winget Installed"
 If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "CrystalDiskInfo").Length -gt 0)) {
     winget install crystaldiskinfo -e
 }
-Start-Process 'C:\Program Files\CrystalDiskInfo\DiskInfo64.exe'
+Start-Process '$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe'
 # PromptForChoice Args
 $Title = "Is disk OK?"
 $Prompt = "Wait that CrystalDiskInfo shows result. Is disk OK? Enter your choice"
@@ -65,11 +67,8 @@ switch($Choice)
         If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
             winget install git -e
         }
-        c:
-        cd \
-        git clone https://github.com/kimostberg/yllapito.git
+        $env:SystemDrive\Program Files\Git\bin\git.exe clone https://github.com/kimostberg/yllapito.git
         cd yllapito
-        mkdir logs
         .\tweaks.ps1
         .\SetServicesToManual.ps1
         .\Update.ps1

@@ -1,6 +1,6 @@
 # Maintenance script
 
-Based on [Chris Titus Tech's Windows Utility]<https://github.com/ChrisTitusTech/winutil>
+Based on [Chris Titus Tech's Windows Utility](https://github.com/ChrisTitusTech/winutil)
 
 Requires you to launch PowerShell or Windows Terminal As ADMINISTRATOR! 
 

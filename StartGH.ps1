@@ -1,4 +1,4 @@
-﻿md $env:SystemDrive\maintenance\logs
+﻿New-Item -Path "$env:SystemDrive\maintenance\logs" -ItemType Directory 
 Start-Transcript \maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Winutil.log -Append
 
 # Check if winget is installed
@@ -68,7 +68,7 @@ switch($Choice)
             exit
         }
         cd $env:SystemDrive\maintenance
-        rm -r $env:SystemDrive\maintenance\yllapito
+        rm -r -f $env:SystemDrive\maintenance\yllapito
         git.exe clone https://github.com/kimostberg/yllapito.git
         \yllapito\tweaks.ps1
         \yllapito\SetServicesToManual.ps1

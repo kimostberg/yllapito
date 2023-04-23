@@ -6,7 +6,7 @@ Start-Transcript \maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Y
 
 Start-Process powershell.exe -Verb RunAs -ArgumentList "-command irm https://raw.githubusercontent.com/kimostberg/yllapito/main/Winget.ps1 | iex | Out-Host" -WindowStyle Normal -ErrorAction Stop
 
-
+Write-Host "Checking if CrystalDiskInfo is Installed..."
 If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "CrystalDiskInfo").Length -gt 0)) {
     winget install crystaldiskinfo -e
 }
@@ -28,9 +28,11 @@ switch($Choice)
         Write-Host "Creating Restore Point in case something bad happens"
             Enable-ComputerRestore -Drive "$env:SystemDrive"
             Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
-        If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
-            winget install git -e
-            exit
+            Write-Host "Checking if Git is Installed..."
+            If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
+                Write-Host "Installing Git. Run script again after install."
+                winget install git -e
+                exit
         }
         cd $env:SystemDrive\maintenance
         rm -r -Force $env:SystemDrive\maintenance\yllapito

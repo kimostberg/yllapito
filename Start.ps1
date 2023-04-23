@@ -1,8 +1,4 @@
-﻿<#
-.NOTES
-    Author         : Kim Ostberg
-    GitHub         : https://github.com/kimostberg
-#>
+﻿
 
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 New-Item -Path "$env:SystemDrive\maintenance\logs" -ItemType Directory 

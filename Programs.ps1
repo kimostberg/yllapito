@@ -32,7 +32,7 @@ $ProgramsToInstall =
     
     #>
 
-    param($ProgramsToInstall)
+#    param($ProgramsToInstall)
 
     $x = 0
     $count = $($ProgramsToInstall -split ",").Count

@@ -72,6 +72,8 @@ switch($Choice)
             If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
                 Write-Host "Installing Git. Run script again after install."
                 winget install git -e
+                Write-Host "Git Installed. Script will exit now. Please uns script again to continue."
+                Read-Host -Prompt "Press any key to continue"
                 exit
         }
         cd $env:SystemDrive\maintenance

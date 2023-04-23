@@ -64,3 +64,9 @@
     Catch{
         throw [WingetFailedInstall]::new('Failed to install')
     }
+
+    class WingetFailedInstall : Exception {
+        [string] $additionalData
+
+        WingetFailedInstall($Message) : base($Message) {}
+    }

@@ -1,4 +1,4 @@
-﻿Write-Host "Checking CleanMGR settings..."
+﻿Write-Host "Setting CleanMGR..."
 $DWordName = "StateFlags0112"
 
 $Locations = 

@@ -1,4 +1,4 @@
-$wingetinstall = 
+$ProgramsToInstall = 
 "Brave.Brave",
 "Google.Chrome",
 "Mozilla.Firefox",
@@ -24,33 +24,29 @@ $wingetinstall =
 #"",
 "ALCPU.CoreTemp"
 
-# Install all winget programs in new window
-        #$wingetinstall.ToArray()
-        # Define Output variable
-        $wingetResult = New-Object System.Collections.Generic.List[System.Object]
-        foreach ( $node in $wingetinstall ) {
-            try {
-                Start-Process powershell.exe -Verb RunAs -ArgumentList "-command Start-Transcript $PWD\logs\winget-install-$node.log -Append; winget install -e --accept-source-agreements --accept-package-agreements --silent $node | Out-Host" -WindowStyle Normal
-                $wingetResult.Add("$node`n")
-                Start-Sleep -s 6
-                Wait-Process winget -Timeout 90 -ErrorAction SilentlyContinue
-            }
-            catch [System.InvalidOperationException] {
-                Write-Warning "Allow Yes on User Access Control to Install"
-            }
-            catch {
-                Write-Error $_.Exception
-            }
-        }
-        $wingetResult.ToArray()
-        $wingetResult | ForEach-Object { $_ } | Out-Host
-        
-        if ($wingetResult -ne "") {
-            $Messageboxbody = "Installed Programs `n$($wingetResult)"
-        }
-        else {
-            $Messageboxbody = "No Program(s) are installed"
-        }
+    <#
+    
+        .DESCRIPTION
+        This will install programs via Winget using a new powershell.exe instance to prevent the GUI from locking up.
+        Note the triple quotes are required any time you need a " in a normal script block.
+    
+    #>
+
+    param($ProgramsToInstall)
+
+    $x = 0
+    $count = $($ProgramsToInstall -split ",").Count
+
+    Write-Progress -Activity "Installing Applications" -Status "Starting" -PercentComplete 0
+
+    Foreach ($Program in $($ProgramsToInstall -split ",")){
+    
+        Write-Progress -Activity "Installing Applications" -Status "Installing $Program $($x + 1) of $count" -PercentComplete $($x/$count*100)
+        Start-Process -FilePath winget -ArgumentList "install -e --accept-source-agreements --accept-package-agreements --silent $Program" -NoNewWindow -Wait;
+        $X++
+    }
+
+    Write-Progress -Activity "Installing Applications" -Status "Finished" -Completed
 
         Write-Host "================================="
         Write-Host "---  Installs are Finished    ---"

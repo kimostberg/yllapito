@@ -62,5 +62,5 @@
         Write-Host "Winget Installed"
     }
     Catch{
-        Write-Host "Failed to install"
+        throw [WingetFailedInstall]::new('Failed to install')
     }

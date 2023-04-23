@@ -8,6 +8,7 @@ Start-Process powershell.exe -Verb RunAs -ArgumentList "-command irm https://raw
 
 Write-Host "Checking if CrystalDiskInfo is Installed..."
 If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "CrystalDiskInfo").Length -gt 0)) {
+    Write-Host "Installing CrystalDiskInfo."
     winget install crystaldiskinfo -e
 }
 Start-Process "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe"

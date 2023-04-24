@@ -79,10 +79,11 @@ switch($Choice)
         cd $env:SystemDrive\maintenance
         rm -r -Force $env:SystemDrive\maintenance\yllapito
         git.exe clone https://github.com/kimostberg/yllapito.git
+        .\yllapito\Update.ps1
+        .\yllapito\AntiVirus.ps1
+        .\yllapito\DiskClean.ps1
         .\yllapito\tweaks.ps1
         .\yllapito\SetServicesToManual.ps1
-        .\yllapito\Update.ps1
-        .\yllapito\DiskClean.ps1
         }
     1 { Write-Host "No - Exiting"
         exit

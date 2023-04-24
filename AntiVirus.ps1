@@ -16,7 +16,7 @@ if ($defenderStatus -eq "Running") {
     }
     else {
       # Write an error message and suggest a third option
-      Write-Error "sophosinterceptxcli.exe not found"
+      Write-Error "Sophos not found"
       Write-Host "You may want to try another antivirus software, such as McAfee or Norton."
     }
 }

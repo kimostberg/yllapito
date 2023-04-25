@@ -53,21 +53,29 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
     Write-Host "Installing CrystalDiskInfo."
     winget install crystaldiskinfo -e
 }
-Start-Process "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe"
-# PromptForChoice Args
-$Title = "Is disk OK?"
-$Prompt = "Wait that CrystalDiskInfo shows result. Is disk OK? Enter your choice"
-$Choices = [System.Management.Automation.Host.ChoiceDescription[]] @("&Yes", "&No")
-$Default = 1
+# Run CrystalDiskInfo with /copyexit parameter
+& "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe" /copyexit
 
-# Prompt for the choice
-$Choice = $host.UI.PromptForChoice($Title, $Prompt, $Choices, $Default)
+# Wait for CrystalDiskInfo to finish
+Start-Sleep -Seconds 5
 
-# Action based on the choice
-switch($Choice)
-{
-    0 { Write-Host "Yes"
-        Write-Host "Creating Restore Point in case something bad happens"
+# Read diskinfo.txt
+$diskInfo = Get-Content "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt" -Raw
+
+# Set source and destination paths
+$sourcePath = "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt"
+$destinationPath = "$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-diskinfo.log"
+
+# Copy diskinfo.txt to new location with specific file name format
+Copy-Item $sourcePath $destinationPath
+
+# Delete original diskinfo.txt file
+Remove-Item $sourcePath
+
+# Check if all drives health is good
+if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Status : (?!Good)")) {
+    Write-Output "All drives health is good"
+            Write-Host "Creating Restore Point in case something bad happens"
             Enable-ComputerRestore -Drive "$env:SystemDrive"
             Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
             Write-Host "Checking if Git is Installed..."
@@ -77,17 +85,19 @@ switch($Choice)
                 Write-Host "Git Installed. Script will exit now. Please run script again to continue."
                 Read-Host -Prompt "Press any key to continue"
                 exit
+            }
+            cd $env:SystemDrive\maintenance
+            rm -r -Force $env:SystemDrive\maintenance\yllapito
+            git.exe clone https://github.com/kimostberg/yllapito.git
+            .\yllapito\Update.ps1
+            .\yllapito\AntiVirus.ps1
+            .\yllapito\DiskClean.ps1
+            .\yllapito\tweaks.ps1
+            .\yllapito\SetServicesToManual.ps1
         }
-        cd $env:SystemDrive\maintenance
-        rm -r -Force $env:SystemDrive\maintenance\yllapito
-        git.exe clone https://github.com/kimostberg/yllapito.git
-        .\yllapito\Update.ps1
-        .\yllapito\AntiVirus.ps1
-        .\yllapito\DiskClean.ps1
-        .\yllapito\tweaks.ps1
-        .\yllapito\SetServicesToManual.ps1
-        }
-    1 { Write-Host "No - Exiting"
-        exit
-        }
+} else {
+    Write-Host "Not all drives health is good. Check $destinationPath"
+    Write-Host "Script will exit now."
+    Read-Host -Prompt "Press any key to continue"
+    exit
 }

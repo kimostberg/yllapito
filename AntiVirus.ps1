@@ -17,9 +17,13 @@ if ($defenderStatus -eq "Running") {
     else {
       # Write an error message and suggest a third option
       Write-Host "Sophos not found"
+      $MaintenancePath = Join-Path $env:SystemDrive "maintenance"
+      if (!(Test-Path $MaintenancePath)) {
+          New-Item -ItemType Directory -Force -Path $MaintenancePath
+      }
       # Set the download URL and file path
       Write-Host "Downloading Norton Power Eraser"
-      $DownloadUrl = "https://liveupdate.symantecliveupdate.com/upgrade/NPE/Production/NPE.exe"
+      $DownloadUrl = "https://www.norton.com/npe_latest"
       $FilePath = Join-Path $MaintenancePath "NPE.exe"
 
       # Download Norton Power Eraser

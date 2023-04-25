@@ -95,7 +95,7 @@ if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Stat
             .\yllapito\tweaks.ps1
             .\yllapito\SetServicesToManual.ps1
         }
-} else {
+    else {
     Write-Host "Not all drives health is good. Check $destinationPath"
     Write-Host "Script will exit now."
     Read-Host -Prompt "Press any key to continue"

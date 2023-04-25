@@ -75,7 +75,7 @@ Remove-Item $sourcePath
 if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Status : (?!Good)")) {
     Write-Output "All drives health is good"
 } else {
-    Write-Error "Not all drives health is good. Check $destinationPath"
+    Write-Warning "Not all drives health is good. Check $destinationPath"
     $continue = Read-Host -Prompt "Do you want to continue with maintenance tasks even if the disk is not healthy? (y/n)"
     if ($continue -ne "y") {
         Write-Host "Script will exit now."

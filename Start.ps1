@@ -71,31 +71,34 @@ Copy-Item $sourcePath $destinationPath
 # Delete original diskinfo.txt file
 Remove-Item $sourcePath
 
-## Check if all drives health is good
+# Check if all drives health is good
 if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Status : (?!Good)")) {
     Write-Output "All drives health is good"
-    Write-Host "Creating Restore Point in case something bad happens"
-    Enable-ComputerRestore -Drive "$env:SystemDrive"
-    Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
-    Write-Host "Checking if Git is Installed..."
-    If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
-        Write-Host "Installing Git. Run script again after install."
-        winget install git -e
-        Write-Host "Git Installed. Script will exit now. Please run script again to continue."
-        Read-Host -Prompt "Press any key to continue"
+} else {
+    Write-Error "Not all drives health is good. Check $destinationPath"
+    $continue = Read-Host -Prompt "Do you want to continue with maintenance tasks even if the disk is not healthy? (y/n)"
+    if ($continue -ne "y") {
+        Write-Host "Script will exit now."
         exit
     }
-    cd $env:SystemDrive\maintenance
-    rm -r -Force $env:SystemDrive\maintenance\yllapito
-    git.exe clone https://github.com/kimostberg/yllapito.git
-    .\yllapito\Update.ps1
-    .\yllapito\AntiVirus.ps1
-    .\yllapito\DiskClean.ps1
-    .\yllapito\tweaks.ps1
-    .\yllapito\SetServicesToManual.ps1
-} else {
-    Write-Host "Not all drives health is good. Check $destinationPath"
-    Write-Host "Script will exit now."
+}
+
+Write-Host "Creating Restore Point in case something bad happens"
+Enable-ComputerRestore -Drive "$env:SystemDrive"
+Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
+Write-Host "Checking if Git is Installed..."
+If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
+    Write-Host "Installing Git. Run script again after install."
+    winget install git -e
+    Write-Host "Git Installed. Script will exit now. Please run script again to continue."
     Read-Host -Prompt "Press any key to continue"
     exit
 }
+cd $env:SystemDrive\maintenance
+rm -r -Force $env:SystemDrive\maintenance\yllapito
+git.exe clone https://github.com/kimostberg/yllapito.git
+.\yllapito\Update.ps1
+.\yllapito\AntiVirus.ps1
+.\yllapito\DiskClean.ps1
+.\yllapito\tweaks.ps1
+.\yllapito\SetServicesToManual.ps1

@@ -1,7 +1,10 @@
 ﻿
 
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-New-Item -Path "$env:SystemDrive\maintenance\logs" -ItemType Directory 
+$folderPath = "$env:SystemDrive\maintenance\logs"
+if (!(Test-Path $folderPath)) {
+    New-Item -Path $folderPath -ItemType Directory
+} 
 Start-Transcript \maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Yllapito.log -Append
 
 # Check if winget is installed
@@ -64,7 +67,6 @@ $Choice = $host.UI.PromptForChoice($Title, $Prompt, $Choices, $Default)
 switch($Choice)
 {
     0 { Write-Host "Yes"
-        #irm christitus.com/win | iex
         Write-Host "Creating Restore Point in case something bad happens"
             Enable-ComputerRestore -Drive "$env:SystemDrive"
             Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"

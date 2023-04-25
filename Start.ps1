@@ -1,19 +1,21 @@
-﻿# This script checks if winget is installed and installs it if not
-# It requires PowerShell 5.1 or higher and Windows 10 version 1809 or higher
+﻿
 
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-New-Item -Path "$env:SystemDrive\maintenance\logs" -ItemType Directory -Force
+$folderPath = "$env:SystemDrive\maintenance\logs"
+if (!(Test-Path $folderPath)) {
+    New-Item -Path $folderPath -ItemType Directory
+} 
 Start-Transcript \maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-Yllapito.log -Append
 
 # Check if winget is installed
-Write-Host "Checking if Winget is Installed..." -NoNewline
-if (Test-Path "$env:APPDATA\Microsoft\WindowsApps\winget.exe" -ErrorAction SilentlyContinue) {
+Write-Host "Checking if Winget is Installed..."
+if (Test-Path ~\AppData\Local\Microsoft\WindowsApps\winget.exe) {
     #Checks if winget executable exists and if the Windows Version is 1809 or higher
     Write-Host "Winget Already Installed"
 }
 else {
     #Gets the computer's information
-    $ComputerInfo = Get-ComputerInfo -ErrorAction Stop
+    $ComputerInfo = Get-ComputerInfo
 
     #Gets the Windows Edition
     $OSName = if ($ComputerInfo.OSName) {
@@ -24,13 +26,12 @@ $ComputerInfo.WindowsProductName
 
     if (((($OSName.IndexOf("LTSC")) -ne -1) -or ($OSName.IndexOf("Server") -ne -1)) -and (($ComputerInfo.WindowsVersion) -ge "1809")) {
 
-Write-Host "Running Alternative Installer for LTSC/Server Editions" -NoNewline
+Write-Host "Running Alternative Installer for LTSC/Server Editions"
 
 # Switching to winget-install from PSGallery from asheroto
 # Source: https://github.com/asheroto/winget-installer
 
-$process = Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile","-command irm https://raw.githubusercontent.com/ChrisTitusTech/winutil/$BranchToUse/winget.ps1 | iex | Out-Host" -WindowStyle Normal -PassThru
-Wait-Process -InputObject $process
+Start-Process powershell.exe -Verb RunAs -ArgumentList "-command irm https://raw.githubusercontent.com/ChrisTitusTech/winutil/Main/winget.ps1 | iex | Out-Host" -WindowStyle Normal
 
     }
     elseif (((Get-ComputerInfo).WindowsVersion) -lt "1809") {
@@ -39,67 +40,64 @@ Write-Host "Winget is not supported on this version of Windows (Pre-1809)"
     }
     else {
 #Installing Winget from the Microsoft Store
-Write-Host "Winget not found, installing it now." -NoNewline
-$process = Start-Process "ms-appinstaller:?source=https://aka.ms/getwinget" -PassThru
-Wait-Process -InputObject $process
+Write-Host "Winget not found, installing it now."
+Start-Process "ms-appinstaller:?source=https://aka.ms/getwinget"
+$nid = (Get-Process AppInstaller).Id
+Wait-Process -Id $nid
 Write-Host "Winget Installed"
     }
 } 
 
-# Write a block comment to describe the purpose and usage of this script
-<#
-    This script checks if CrystalDiskInfo is installed and installs it if not.
-    Then it runs CrystalDiskInfo and prompts the user to check if the disk is OK.
-    If the user answers yes, it performs some maintenance tasks using Git and other scripts.
-    If the user answers no, it exits the script.
-#>
-
-# Use full cmdlet names and named parameters
-Write-Output "Checking if CrystalDiskInfo is Installed..."
-If (!(((Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "CrystalDiskInfo").Length -gt 0)) {
-    Write-Output "Installing CrystalDiskInfo."
+Write-Host "Checking if CrystalDiskInfo is Installed..."
+If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "CrystalDiskInfo").Length -gt 0)) {
+    Write-Host "Installing CrystalDiskInfo."
     winget install crystaldiskinfo -e
 }
-Start-Process "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe"
+# Run CrystalDiskInfo with /copyexit parameter
+& "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe" /copyexit
 
-# PromptForChoice Args
-$Title = "Is disk OK?"
-$Prompt = "Wait that CrystalDiskInfo shows result. Is disk OK? Enter your choice"
-$Choices = [System.Management.Automation.Host.ChoiceDescription[]] @("&Yes", "&No")
-$Default = 1
+# Wait for CrystalDiskInfo to finish
+Start-Sleep -Seconds 5
 
-# Prompt for the choice
-$Choice = $host.UI.PromptForChoice($Title, $Prompt, $Choices, $Default)
+# Read diskinfo.txt
+$diskInfo = Get-Content "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt" -Raw
 
-# Action based on the choice
-switch($Choice)
-{
-    0 { 
-        Write-Output "Yes"
-        #irm christitus.com/win | iex
-        Write-Output "Creating Restore Point in case something bad happens"
-        Enable-ComputerRestore -Drive "$env:SystemDrive"
-        Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
-        Write-Output "Checking if Git is Installed..."
-        If (!(((Get-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
-            Write-Output "Installing Git. Run script again after install."
-            winget install git -e
-            Write-Output "Git Installed. Script will exit now. Please run script again to continue."
-            Read-Host -Prompt "Press any key to continue"
-            exit
+# Set source and destination paths
+$sourcePath = "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt"
+$destinationPath = "$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-diskinfo.log"
+
+# Copy diskinfo.txt to new location with specific file name format
+Copy-Item $sourcePath $destinationPath
+
+# Delete original diskinfo.txt file
+Remove-Item $sourcePath
+
+# Check if all drives health is good
+if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Status : (?!Good)")) {
+    Write-Output "All drives health is good"
+            Write-Host "Creating Restore Point in case something bad happens"
+            Enable-ComputerRestore -Drive "$env:SystemDrive"
+            Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
+            Write-Host "Checking if Git is Installed..."
+            If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
+                Write-Host "Installing Git. Run script again after install."
+                winget install git -e
+                Write-Host "Git Installed. Script will exit now. Please run script again to continue."
+                Read-Host -Prompt "Press any key to continue"
+                exit
+            }
+            cd $env:SystemDrive\maintenance
+            rm -r -Force $env:SystemDrive\maintenance\yllapito
+            git.exe clone https://github.com/kimostberg/yllapito.git
+            .\yllapito\Update.ps1
+            .\yllapito\AntiVirus.ps1
+            .\yllapito\DiskClean.ps1
+            .\yllapito\tweaks.ps1
+            .\yllapito\SetServicesToManual.ps1
         }
-        # Use consistent indentation and spacing
-        cd $env:SystemDrive\maintenance
-        Remove-Item -Path $env:SystemDrive\maintenance\yllapito -Recurse -Force
-        git.exe clone https://github.com/kimostberg/yllapito.git
-        .\yllapito\Update.ps1
-        .\yllapito\AntiVirus.ps1
-        .\yllapito\DiskClean.ps1
-        .\yllapito\tweaks.ps1
-        .\yllapito\SetServicesToManual.ps1
-    }
-    1 { 
-        Write-Output "No - Exiting"
-        exit
-    }
+} else {
+    Write-Host "Not all drives health is good. Check $destinationPath"
+    Write-Host "Script will exit now."
+    Read-Host -Prompt "Press any key to continue"
+    exit
 }

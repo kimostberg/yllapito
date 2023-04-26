@@ -93,9 +93,9 @@ else {
     Add-WUServiceManager -MicrosoftUpdate
 }
 
-$WingetUpdates = "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-WingetUpdates.log"
-$ChocoUpdates ="$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-ChocoUpdates.log"
-$MSUpdates = "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-MSUpdates.log"
+$WingetUpdates = "$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-WingetUpdates.log"
+$ChocoUpdates ="$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-ChocoUpdates.log"
+$MSUpdates = "$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-MSUpdates.log"
 
 Write-Host "Updating Winget Programs"
 Write-Host "Check log $WingetUpdates"

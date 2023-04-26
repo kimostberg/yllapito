@@ -35,7 +35,7 @@ Install-Script -Name winget-install -Force
 winget-install.ps1
 Write-Host "WinGet Installed. Script will exit now. Please run script again to continue."
 Read-Host -Prompt "Press any key to continue"
-break
+exit
     }
     elseif (((Get-ComputerInfo).WindowsVersion) -lt "1809") {
 #Checks if Windows Version is too old for winget
@@ -96,7 +96,7 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
     winget install git -e
     Write-Host "Git Installed. Script will exit now. Please run script again to continue."
     Read-Host -Prompt "Press any key to continue"
-    break
+    exit
 }
 cd $env:SystemDrive\maintenance
 rm -r -Force $env:SystemDrive\maintenance\yllapito

@@ -65,6 +65,17 @@ Start-Sleep -Seconds 5
 # Read diskinfo.txt
 $diskInfo = Get-Content "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt" -Raw
 
+# Get Health Status and Drive Letter
+$healthStatus = $diskInfo | Where-Object { $_ -match "Health Status :" }
+$driveLetter = $diskInfo | Where-Object { $_ -match "Drive Letter :" }
+
+# Print summary
+Write-Output "Summary:"
+for ($i = 0; $i -lt $driveLetter.Count; $i++) {
+    Write-Output $driveLetter[$i]
+    Write-Output $healthStatus[$i]
+}
+
 # Set source and destination paths
 $sourcePath = "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt"
 $destinationPath = "$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-diskinfo.log"

@@ -33,7 +33,9 @@ Write-Host "Running Alternative Installer for LTSC/Server Editions"
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
 Install-Script -Name winget-install -Force
 winget-install.ps1
-
+Write-Host "WinGet Installed. Script will exit now. Please run script again to continue."
+Read-Host -Prompt "Press any key to continue"
+break
     }
     elseif (((Get-ComputerInfo).WindowsVersion) -lt "1809") {
 #Checks if Windows Version is too old for winget
@@ -81,7 +83,7 @@ if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Stat
     $continue = Read-Host -Prompt "Do you want to continue with maintenance tasks even if the disk is not healthy? (y/n)"
     if ($continue -ne "y") {
         Write-Host "Script will exit now."
-        exit
+        break
     }
 }
 
@@ -94,7 +96,7 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
     winget install git -e
     Write-Host "Git Installed. Script will exit now. Please run script again to continue."
     Read-Host -Prompt "Press any key to continue"
-    exit
+    break
 }
 cd $env:SystemDrive\maintenance
 rm -r -Force $env:SystemDrive\maintenance\yllapito

@@ -105,6 +105,7 @@ if (Test-Path $yllapitoPath) {
 } else {
     cd $env:SystemDrive\maintenance
     git.exe clone https://github.com/kimostberg/yllapito.git $yllapitoPath
+    git config --global --add safe.directory $yllapitoPath
 }
 
 $scripts = @(

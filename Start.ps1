@@ -102,7 +102,7 @@ if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Stat
 
 Write-Host "Creating Restore Point in case something bad happens"
 Enable-ComputerRestore -Drive "$env:SystemDrive"
-Checkpoint-Computer -Description "RestorePoint1" -RestorePointType "MODIFY_SETTINGS"
+Checkpoint-Computer -Description "Before Maintenance" -RestorePointType "MODIFY_SETTINGS"
 Write-Host "Checking if Git is Installed..."
 If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
     Write-Host "Installing Git. Run script again after install."
@@ -111,7 +111,7 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
     Read-Host -Prompt "Press any key to continue"
     exit
 }
-$yllapitoPath = "$env:SystemDrive\maintenance\yllapito"
+$yllapitoPath = "$env:SystemDrive\maintenance\scripts"
 if (Test-Path $yllapitoPath) {
     cd $yllapitoPath
     git.exe pull

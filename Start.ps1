@@ -100,11 +100,12 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
 }
 $yllapitoPath = "$env:SystemDrive\maintenance\yllapito"
 if (Test-Path $yllapitoPath) {
-    Remove-Item -Recurse -Force $yllapitoPath
+    cd $yllapitoPath
+    git.exe pull
+} else {
+    cd $env:SystemDrive\maintenance
+    git.exe clone https://github.com/kimostberg/yllapito.git $yllapitoPath
 }
-& $env:SystemDrive
-cd \maintenance
-git.exe clone https://github.com/kimostberg/yllapito.git $yllapitoPath
 
 $scripts = @(
     "Update.ps1",

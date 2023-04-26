@@ -56,6 +56,7 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
     Write-Host "Installing CrystalDiskInfo."
     winget install crystaldiskinfo -e
 }
+
 # Run CrystalDiskInfo with /copyexit parameter
 & "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe" /copyexit
 

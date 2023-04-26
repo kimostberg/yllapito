@@ -136,3 +136,4 @@ foreach ($script in $scripts) {
         & $scriptPath
     }
 }
+Stop-Transcript

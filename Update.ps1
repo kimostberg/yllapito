@@ -39,7 +39,7 @@ if ((Get-Command -Name choco -ErrorAction Ignore) -and ($chocoVersion = (Get-Ite
 }
 
     
-S# Check if winget is installed
+# Check if winget is installed
 Write-Host "Checking if Winget is Installed..."
 if (Test-Path ~\AppData\Local\Microsoft\WindowsApps\winget.exe) {
     #Checks if winget executable exists and if the Windows Version is 1809 or higher
@@ -63,7 +63,9 @@ Write-Host "Running Alternative Installer for LTSC/Server Editions"
 # Switching to winget-install from PSGallery from asheroto
 # Source: https://github.com/asheroto/winget-installer
 
-Start-Process powershell.exe -Verb RunAs -ArgumentList "-command irm https://raw.githubusercontent.com/ChrisTitusTech/winutil/$BranchToUse/winget.ps1 | iex | Out-Host" -WindowStyle Normal
+Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+Install-Script -Name winget-install -Force
+winget-install.ps1
 
     }
     elseif (((Get-ComputerInfo).WindowsVersion) -lt "1809") {
@@ -91,12 +93,16 @@ else {
     Add-WUServiceManager -MicrosoftUpdate
 }
 
+$WingetUpdates = "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-WingetUpdates.log"
+$ChocoUpdates ="$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-ChocoUpdates.log"
+$MSUpdates = "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-MSUpdates.log"
+
 Write-Host "Updating Winget Programs"
-Write-Host "Check log $PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-WingetUpdates.log"
-winget upgrade --all --silent | Out-File "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-WingetUpdates.log" -Force
+Write-Host "Check log $WingetUpdates"
+winget upgrade --all --silent | Out-File $WingetUpdates -Force
 Write-Host "Updating Chocolatey Programs"
-Write-Host "Check log $PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-ChocoUpdates.log"
-choco upgrade all | Out-File "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-ChocoUpdates.log" -Force
+Write-Host "Check log $ChocoUpdates"
+choco upgrade all | Out-File $ChocoUpdates -Force
 Write-Host "Updating Windows" 
-Write-Host "Check log $PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-MSUpdates.log"
-Install-WindowsUpdate -MicrosoftUpdate -AcceptAll | Out-File "$PWD\logs\$env:computername-$(Get-Date -f yyyy-MM-dd_HH-mm)-MSUpdates.log" -Force
+Write-Host "Check log $MSUpdates"
+Install-WindowsUpdate -MicrosoftUpdate -AcceptAll | Out-File $MSUpdates -Force

@@ -98,11 +98,25 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
     Read-Host -Prompt "Press any key to continue"
     exit
 }
-cd $env:SystemDrive\maintenance
-rm -r -Force $env:SystemDrive\maintenance\yllapito
-git.exe clone https://github.com/kimostberg/yllapito.git
-.\yllapito\Update.ps1
-.\yllapito\AntiVirus.ps1
-.\yllapito\DiskClean.ps1
-.\yllapito\tweaks.ps1
-.\yllapito\SetServicesToManual.ps1
+$yllapitoPath = "$env:SystemDrive\maintenance\yllapito"
+if (Test-Path $yllapitoPath) {
+    Remove-Item -Recurse -Force $yllapitoPath
+}
+& $env:SystemDrive
+cd \maintenance
+git.exe clone https://github.com/kimostberg/yllapito.git $yllapitoPath
+
+$scripts = @(
+    "Update.ps1",
+    "AntiVirus.ps1",
+    "DiskClean.ps1",
+    "tweaks.ps1",
+    "SetServicesToManual.ps1"
+)
+
+foreach ($script in $scripts) {
+    $scriptPath = Join-Path $yllapitoPath $script
+    if (Test-Path $scriptPath) {
+        & $scriptPath
+    }
+}

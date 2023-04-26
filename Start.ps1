@@ -115,7 +115,8 @@ $scripts = @(
     "AntiVirus.ps1",
     "DiskClean.ps1",
     "tweaks.ps1",
-    "SetServicesToManual.ps1"
+    "SetServicesToManual.ps1" #,
+#    "SendLogs.ps1"
 )
 
 foreach ($script in $scripts) {
@@ -123,24 +124,4 @@ foreach ($script in $scripts) {
     if (Test-Path $scriptPath) {
         & $scriptPath
     }
-}
-$From = "sender@kimostberg.ti"
-$To = "receiver@kimostberg.ti"
-$Cc = "someone.else@kimostberg.ti"
-$Subject = "$env:computername Log Files"
-$Body = "Please find the attached log files."
-$SMTPServer = "smtp.gmail.com"
-$SMTPPort = 587
-$LogDirectory = "$env:SystemDrive\maintenance\logs"
-
-$Attachments = Get-ChildItem $LogDirectory -Filter *.log | Select-Object -ExpandProperty FullName
-
-$Credential = Get-Credential -Message "Please enter your email credentials"
-
-Send-MailMessage -From $From -to $To -Cc $Cc -Subject $Subject -Body $Body -SmtpServer $SMTPServer -port $SMTPPort -Attachments $Attachments -UseSsl -Credential $Credential
-
-if ($?) {
-    Remove-Item $LogDirectory\*.log
-} else {
-    Write-Error "An error occurred while sending the email"
 }

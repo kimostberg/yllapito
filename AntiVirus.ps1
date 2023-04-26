@@ -4,7 +4,7 @@ if ($defenderStatus -eq "Running") {
     # Update Microsoft Defender signatures
     Update-MpSignature -Verbose
     # Run a quick antivirus scan
-    Start-MpScan -ScanType QuickScan -WhatIf
+    Start-MpScan -ScanType QuickScan
 } else {
     # Microsoft Defender is not running
     Write-Host "Microsoft Defender is not running."

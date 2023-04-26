@@ -64,6 +64,7 @@ Start-Sleep -Seconds 5
 
 # Read diskinfo.txt
 $diskInfo = Get-Content "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt" -Raw
+$diskInfo = $diskInfo -split "`r?`n"
 
 # Get Health Status and Drive Letter
 $healthStatus = $diskInfo | Where-Object { $_ -match "Health Status :" }

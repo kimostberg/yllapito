@@ -78,6 +78,8 @@ Remove-Item $sourcePath
 # Check if all drives health is good
 if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Status : (?!Good)")) {
     Write-Output "All drives health is good"
+} elseif ($diskInfo -match "Virtual Disk") {
+    Write-Output "Virtual Disk found. Continuing with maintenance tasks."
 } else {
     Write-Warning "Not all drives health is good. Check $destinationPath"
     $continue = Read-Host -Prompt "Do you want to continue with maintenance tasks even if the disk is not healthy? (y/n)"

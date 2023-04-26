@@ -30,7 +30,9 @@ Write-Host "Running Alternative Installer for LTSC/Server Editions"
 # Switching to winget-install from PSGallery from asheroto
 # Source: https://github.com/asheroto/winget-installer
 
-Start-Process powershell.exe -Verb RunAs -ArgumentList "-command irm https://raw.githubusercontent.com/ChrisTitusTech/winutil/Main/winget.ps1 | iex | Out-Host" -WindowStyle Normal
+Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
+Install-Script -Name winget-install -Force
+winget-install.ps1
 
     }
     elseif (((Get-ComputerInfo).WindowsVersion) -lt "1809") {

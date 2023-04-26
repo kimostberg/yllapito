@@ -1,3 +1,4 @@
+Stop-Transcript
 $From = "senders@email.address"
 $To = "receivers@email.address"
 #$Cc = "someone.elses@email.address"

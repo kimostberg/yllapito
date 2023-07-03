@@ -54,7 +54,7 @@ Write-Host "Winget Installed"
 Write-Host "Checking if CrystalDiskInfo is Installed..."
 If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "CrystalDiskInfo").Length -gt 0)) {
     Write-Host "Installing CrystalDiskInfo."
-    winget install crystaldiskinfo -e
+    winget install crystaldiskinfo -e -s winget
 }
 
 # Run CrystalDiskInfo with /copyexit parameter
@@ -98,6 +98,7 @@ if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Stat
     $continue = Read-Host -Prompt "Do you want to continue with maintenance tasks even if the disk is not healthy? (y/n)"
     if ($continue -ne "y") {
         Write-Host "Script will exit now."
+        Stop-Transcript
         break
     }
 }
@@ -108,9 +109,10 @@ Checkpoint-Computer -Description "Before Maintenance" -RestorePointType "MODIFY_
 Write-Host "Checking if Git is Installed..."
 If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "Git").Length -gt 0)) {
     Write-Host "Installing Git. Run script again after install."
-    winget install git -e
+    winget install git -e -s winget
     Write-Host "Git Installed. Script will exit now. Please run script again to continue."
     Read-Host -Prompt "Press any key to continue"
+    Stop-Transcript
     exit
 }
 $yllapitoPath = "$env:SystemDrive\maintenance\scripts"

@@ -131,9 +131,9 @@ if (Test-Path $yllapitoPath) {
 $scripts = @(
     "Update.ps1",
     "AntiVirus.ps1",
-    "DiskClean.ps1",
     "tweaks.ps1",
     "SetServicesToManual.ps1",
+    "DiskClean.ps1",
     "SendLogs.ps1"
 )
 

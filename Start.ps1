@@ -87,6 +87,9 @@ Copy-Item $sourcePath $destinationPath
 
 # Delete original diskinfo.txt file
 Remove-Item $sourcePath
+notepad $destinationPath
+
+Start-Sleep -s 5
 
 # Check if all drives health is good
 if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Status : (?!Good)")) {

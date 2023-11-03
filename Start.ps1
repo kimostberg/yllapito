@@ -61,7 +61,7 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
 & "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe" /copyexit
 
 # Wait for CrystalDiskInfo to finish
-Start-Sleep -Seconds 5
+Start-Sleep -Seconds 10
 
 # Read diskinfo.txt
 $diskInfo = Get-Content "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt" -Raw
@@ -81,15 +81,15 @@ for ($i = 0; $i -lt $driveLetter.Count; $i++) {
 # Set source and destination paths
 $sourcePath = "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt"
 $destinationPath = "$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-diskinfo.log"
+notepad $sourcePath
 
 # Copy diskinfo.txt to new location with specific file name format
 Copy-Item $sourcePath $destinationPath
 
 # Delete original diskinfo.txt file
 Remove-Item $sourcePath
-notepad $destinationPath
 
-Start-Sleep -s 5
+Start-Sleep -s 10
 
 # Check if all drives health is good
 if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Status : (?!Good)")) {

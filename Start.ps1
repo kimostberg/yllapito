@@ -62,6 +62,7 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
 
 # Wait for CrystalDiskInfo to finish
 Start-Sleep -Seconds 10
+notepad "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt"
 
 # Read diskinfo.txt
 $diskInfo = Get-Content "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt" -Raw
@@ -81,8 +82,6 @@ for ($i = 0; $i -lt $driveLetter.Count; $i++) {
 # Set source and destination paths
 $sourcePath = "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt"
 $destinationPath = "$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-diskinfo.log"
-Start-Sleep -s 10
-notepad $sourcePath
 
 # Copy diskinfo.txt to new location with specific file name format
 Copy-Item $sourcePath $destinationPath

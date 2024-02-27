@@ -81,6 +81,7 @@ for ($i = 0; $i -lt $driveLetter.Count; $i++) {
 # Set source and destination paths
 $sourcePath = "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt"
 $destinationPath = "$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f yyyy-MM-dd)-diskinfo.log"
+Start-Sleep -s 10
 notepad $sourcePath
 
 # Copy diskinfo.txt to new location with specific file name format
@@ -89,7 +90,7 @@ Copy-Item $sourcePath $destinationPath
 # Delete original diskinfo.txt file
 Remove-Item $sourcePath
 
-Start-Sleep -s 10
+
 
 # Check if all drives health is good
 if ($diskInfo -match "Health Status : Good" -and !($diskInfo -match "Health Status : (?!Good)")) {

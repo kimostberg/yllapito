@@ -12,7 +12,7 @@ if ($defenderStatus -eq "Running") {
     $sophosPath = "C:\Program Files\Sophos\Endpoint Defense\sophosinterceptxcli.exe"
     if (Test-Path $sophosPath) {
       # Run a system scan with no user interface and verbose output
-      & $sophosPath scan --noui --system
+      & $sophosPath scan --noui
     }
     else {
       # Write an error message and suggest a third option

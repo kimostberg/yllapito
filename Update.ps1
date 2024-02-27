@@ -99,7 +99,7 @@ $MSUpdates = "$env:SystemDrive\maintenance\logs\$env:computername-$(Get-Date -f 
 
 Write-Host "Updating Winget Programs"
 Write-Host "Check log $WingetUpdates"
-winget upgrade --all --silent | Out-File $WingetUpdates -Force
+winget upgrade --all --silent --accept-source-agreements | Out-File $WingetUpdates -Force
 Write-Host "Updating Chocolatey Programs"
 Write-Host "Check log $ChocoUpdates"
 choco upgrade all | Out-File $ChocoUpdates -Force

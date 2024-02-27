@@ -109,4 +109,6 @@ choco upgrade all | Out-File $ChocoUpdates -Force
 choco outdated
 Write-Host "Updating Windows" 
 Write-Host "Check log $MSUpdates"
+Get-WindowsUpdate
 Install-WindowsUpdate -MicrosoftUpdate -AcceptAll | Out-File $MSUpdates -Force
+Get-WindowsUpdate

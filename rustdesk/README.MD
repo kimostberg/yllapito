@@ -13,6 +13,7 @@ chmod +x ./rustdesk.sh
 ```
 
 Mac
+The script has not been tested because I don't have a Mac.
 
 ```
 curl -o rustdesk.sh https://raw.githubusercontent.com/kimostberg/yllapito/main/rustdesk/rustdesk-mac.sh

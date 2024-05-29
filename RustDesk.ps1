@@ -113,3 +113,5 @@ Write-Output "RustDesk ID: $rustdesk_id" | Out-File -FilePath $home\Desktop\rust
 # Show the value of the Password Variable
 Write-Output "Password: $rustdesk_pw" | Out-File -FilePath $home\Desktop\rustdesk.txt -Append
 Write-Output "..............................................." | Out-File -FilePath $home\Desktop\rustdesk.txt -Append
+
+notepad $home\Desktop\rustdesk.txt

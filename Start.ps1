@@ -133,8 +133,8 @@ $scripts = @(
     "AntiVirus.ps1",
     "tweaks.ps1",
     "SetServicesToManual.ps1",
-    "DiskClean.ps1",
-    "SendLogs.ps1"
+    "DiskClean.ps1" #,
+#    "SendLogs.ps1"
 )
 
 foreach ($script in $scripts) {

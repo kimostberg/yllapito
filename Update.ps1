@@ -102,11 +102,11 @@ Write-Host "Check log $WingetUpdates"
 winget upgrade
 winget upgrade --all --silent --accept-source-agreements --accept-package-agreements | Out-File $WingetUpdates -Force
 winget upgrade
-Write-Host "Updating Chocolatey Programs"
-Write-Host "Check log $ChocoUpdates"
-choco outdated
-choco upgrade all | Out-File $ChocoUpdates -Force
-choco outdated
+#Write-Host "Updating Chocolatey Programs"
+#Write-Host "Check log $ChocoUpdates"
+#choco outdated
+#choco upgrade all | Out-File $ChocoUpdates -Force
+#choco outdated
 Write-Host "Updating Windows" 
 Write-Host "Check log $MSUpdates"
 Get-WindowsUpdate

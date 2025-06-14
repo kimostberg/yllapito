@@ -125,6 +125,8 @@ if (Test-Path $yllapitoPath) {
     git config --global --add safe.directory $yllapitoPath
 }
 
+# Load scripts dynamically from the GitHub repository
+$repoUrl = "https://raw.githubusercontent.com/kimostberg/yllapito/main/"
 $scripts = @(
     "Update.ps1",
     "AntiVirus.ps1",
@@ -135,9 +137,13 @@ $scripts = @(
 )
 
 foreach ($script in $scripts) {
-    $scriptPath = Join-Path $yllapitoPath $script
-    if (Test-Path $scriptPath) {
-        & $scriptPath
+    $scriptUrl = "$repoUrl$script"
+    try {
+        Write-Host "Downloading and executing $script from GitHub..."
+        $scriptContent = Invoke-WebRequest -Uri $scriptUrl -UseBasicParsing
+        Invoke-Expression $scriptContent.Content
+    } catch {
+        Write-Warning "Failed to download or execute $script from GitHub. Error: $_"
     }
 }
 Stop-Transcript

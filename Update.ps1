@@ -1,4 +1,4 @@
-﻿## Set Updates to Recommended
+﻿# Set Updates to Recommended
 Write-Host "Disabling driver offering through Windows Update..."
 If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata")) {
     New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Device Metadata" -Force | Out-Null

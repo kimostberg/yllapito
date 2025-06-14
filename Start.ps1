@@ -1,4 +1,4 @@
-﻿Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 $folderPath = "$env:SystemDrive\maintenance\logs"
 if (!(Test-Path $folderPath)) {
     New-Item -Path $folderPath -ItemType Directory

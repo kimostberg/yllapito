@@ -54,7 +54,7 @@ Write-Host "Winget Installed"
 Write-Host "Checking if CrystalDiskInfo is Installed..."
 If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayName -Match "CrystalDiskInfo").Length -gt 0)) {
     Write-Host "Installing CrystalDiskInfo."
-    winget install crystaldiskinfo -e -s winget
+    winget install CrystalDewWorld.CrystalDiskInfo -e -s winget
 }
 
 # Run CrystalDiskInfo with /copyexit parameter

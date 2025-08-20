@@ -231,3 +231,9 @@ If (-not (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersio
 If (-not (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -ErrorAction SilentlyContinue)) {
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -Type DWord -Value 0
 }
+
+# Disable LockScreen
+If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization")) {
+    New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization" -Force | Out-Null
+}
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization" -Name "NoLockScreen" -Type DWord -Value 1

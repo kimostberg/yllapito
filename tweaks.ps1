@@ -185,6 +185,9 @@ Write-Host "Adjusted visual effects for performance"
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "ShowTaskViewButton" -Type DWord -Value 0
 
 # Disable Widgets Button in Taskbar
+If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced")) {
+    New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Force | Out-Null
+}
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarDa" -Type DWord -Value 0
 
 # Disable Bing Search in Start Menu
@@ -199,7 +202,10 @@ Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "DragWidth" -Type DWo
 # Shutdown Verbose Status
 Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersio\Policies\System" -Name "VerboseStatus" -Type DWord -Value 1
 # Disable Search Box Suggestions
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Microsoft\Windows\Explorer\" -Name "DisableSearchBoxSuggestions" -Type DWord -Value 1
+If (!(Test-Path "HKCU:\Software\Microsoft\Windows\Microsoft\Windows\Explorer")) {
+    New-Item -Path "HKCU:\Software\Microsoft\Windows\Microsoft\Windows\Explorer" -Force | Out-Null
+}
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Microsoft\Windows\Explorer" -Name "DisableSearchBoxSuggestions" -Type DWord -Value 1
 # Remove Startup Delays
 Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "StartupDelayInMSec" -Type DWord -Value 1
 Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -Type DWord -Value 0

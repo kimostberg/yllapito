@@ -200,14 +200,34 @@ Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "DragHeight" -Type DW
 # Drag Width
 Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "DragWidth" -Type DWord -Value 30
 # Shutdown Verbose Status
-Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersio\Policies\System" -Name "VerboseStatus" -Type DWord -Value 1
+If (!(Test-Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System")) {
+    New-Item -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Force | Out-Null
+}
+If (-not (Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "VerboseStatus" -ErrorAction SilentlyContinue)) {
+    Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\System" -Name "VerboseStatus" -Type DWord -Value 1
+}
 # Disable Search Box Suggestions
 If (!(Test-Path "HKCU:\Software\Microsoft\Windows\Microsoft\Windows\Explorer")) {
     New-Item -Path "HKCU:\Software\Microsoft\Windows\Microsoft\Windows\Explorer" -Force | Out-Null
 }
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Microsoft\Windows\Explorer" -Name "DisableSearchBoxSuggestions" -Type DWord -Value 1
 # Remove Startup Delays
-Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "StartupDelayInMSec" -Type DWord -Value 1
-Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -Type DWord -Value 0
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "StartupDelayInMSec" -Type DWord -Value 1
-Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -Type DWord -Value 0
+If (!(Test-Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
+    New-Item -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force | Out-Null
+}
+If (-not (Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "StartupDelayInMSec" -ErrorAction SilentlyContinue)) {
+    Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "StartupDelayInMSec" -Type DWord -Value 1
+}
+If (-not (Get-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -ErrorAction SilentlyContinue)) {
+    Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -Type DWord -Value 0
+}
+
+If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize")) {
+    New-Item -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Force | Out-Null
+}
+If (-not (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "StartupDelayInMSec" -ErrorAction SilentlyContinue)) {
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "StartupDelayInMSec" -Type DWord -Value 1
+}
+If (-not (Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -ErrorAction SilentlyContinue)) {
+    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -Type DWord -Value 0
+}

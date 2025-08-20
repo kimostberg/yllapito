@@ -200,4 +200,8 @@ Set-ItemProperty -Path "HKCU:\Control Panel\Desktop" -Name "DragWidth" -Type DWo
 Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersio\Policies\System" -Name "VerboseStatus" -Type DWord -Value 1
 # Disable Search Box Suggestions
 Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\Microsoft\Windows\Explorer\" -Name "DisableSearchBoxSuggestions" -Type DWord -Value 1
-
+# Remove Startup Delays
+Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "StartupDelayInMSec" -Type DWord -Value 1
+Set-ItemProperty -Path "HKLM:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "StartupDelayInMSec" -Type DWord -Value 1
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Serialize" -Name "WaitForIdleState" -Type DWord -Value 0

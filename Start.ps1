@@ -56,12 +56,54 @@ If (!(((gp HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*).DisplayN
     winget install CrystalDewWorld.CrystalDiskInfo -e -s winget
 }
 
-# Run CrystalDiskInfo with /copyexit parameter
-& "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe" /copyexit
+$diskInfoExe = "$env:SystemDrive\Program Files\CrystalDiskInfo\DiskInfo64.exe"
+$diskInfoTxt = "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt"
 
-# Wait for CrystalDiskInfo to finish
-Start-Sleep -Seconds 10
-notepad "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt"
+# Remove any stale result file so we know a fresh one was actually written
+if (Test-Path $diskInfoTxt) {
+    Remove-Item $diskInfoTxt -Force
+}
+
+# Run CrystalDiskInfo with /copyexit parameter and actually wait for it to exit
+Start-Process -FilePath $diskInfoExe -ArgumentList "/copyexit" -Wait
+
+# Belt-and-suspenders: poll for the output file to appear (and stop growing/being locked)
+# in case CrystalDiskInfo relaunches itself and the -Wait above returns early.
+$timeoutSeconds = 60
+$elapsed = 0
+$pollInterval = 1
+
+while (-not (Test-Path $diskInfoTxt) -and $elapsed -lt $timeoutSeconds) {
+    Start-Sleep -Seconds $pollInterval
+    $elapsed += $pollInterval
+}
+
+if (-not (Test-Path $diskInfoTxt)) {
+    Write-Warning "diskinfo.txt was not created after waiting $timeoutSeconds seconds. CrystalDiskInfo may have failed to run."
+    Stop-Transcript
+    break
+}
+
+# Make sure the file is done being written: wait until the file handle is no
+# longer locked by another process (CrystalDiskInfo has fully released it).
+$fileReady = $false
+$elapsed = 0
+while (-not $fileReady -and $elapsed -lt $timeoutSeconds) {
+    try {
+        $stream = [System.IO.File]::Open($diskInfoTxt, 'Open', 'Read', 'None')
+        $stream.Close()
+        $fileReady = $true
+    } catch {
+        Start-Sleep -Seconds $pollInterval
+        $elapsed += $pollInterval
+    }
+}
+
+if (-not $fileReady) {
+    Write-Warning "diskinfo.txt is still locked after waiting $timeoutSeconds seconds. Continuing anyway, but results may be incomplete."
+}
+
+notepad $diskInfoTxt
 
 # Read diskinfo.txt
 $diskInfo = Get-Content "$env:SystemDrive\Program Files\CrystalDiskInfo\diskinfo.txt" -Raw
